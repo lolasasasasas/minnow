@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
-#include <deque>
+
 class Reader;
 class Writer;
 
@@ -22,12 +22,16 @@ public:
   bool has_error() const { return error_; }; // Has the stream had an error?
 
 protected:
-  std::deque<char> buffer_; // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
+  // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
   uint64_t capacity_;
-  uint64_t bytes_pushed_ {}; //  已写入的字节数
-  uint64_t bytes_popped_ {}; // 已读取的字节数
-  bool is_closed_ {}; // 标记字节流是否已关闭
+  uint64_t size_ {};
+  uint64_t tot_push_bytes_ {};
+  uint64_t tot_pop_bytes_ {};
   bool error_ {};
+  bool close_ { false };
+  std::string buf_;
+  uint64_t head_ {};
+  uint64_t tail_ {};
 };
 
 class Writer : public ByteStream
@@ -53,7 +57,7 @@ public:
 };
 
 /*
- * read: A (provided) helper function thats peeks and pops up to `max_len` bytes
+ * read: A (provided) helper function thats peeks and pops up to `len` bytes
  * from a ByteStream Reader into a string;
  */
-void read( Reader& reader, uint64_t max_len, std::string& out );
+void read( Reader& reader, uint64_t len, std::string& out );

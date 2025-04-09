@@ -12,7 +12,7 @@ using namespace std;
 void read( Reader& reader, uint64_t max_len, string& out )
 {
   out.clear();
-    
+
   while ( reader.bytes_buffered() and out.size() < max_len ) {
     auto view = reader.peek();
 

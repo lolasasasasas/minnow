@@ -1,0 +1,5 @@
+/home/lfynb/桌面/pjt/minnow/src/build/CMakeFiles/minnow_debug.dir
+/home/lfynb/桌面/pjt/minnow/src/build/CMakeFiles/minnow_sanitized.dir
+/home/lfynb/桌面/pjt/minnow/src/build/CMakeFiles/minnow_optimized.dir
+/home/lfynb/桌面/pjt/minnow/src/build/CMakeFiles/edit_cache.dir
+/home/lfynb/桌面/pjt/minnow/src/build/CMakeFiles/rebuild_cache.dir

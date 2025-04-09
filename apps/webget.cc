@@ -9,8 +9,30 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
+<<<<<<< HEAD
   // 创建一个 TCP 套接字
   TCPSocket socket;
+=======
+ Address serveraddr( host, "80" );
+  TCPSocket checkzSocket;
+  checkzSocket.connect( serveraddr );
+  std::string sendBuff;
+  std::string readBuff;
+  sendBuff = "GET " + path + " HTTP/1.1\r\n";
+  sendBuff += "Host: " + host + "\r\n";
+  sendBuff += "Connection:close\r\n\r\n";
+  checkzSocket.write( sendBuff );
+  while ( !checkzSocket.eof() ) {
+    checkzSocket.read( readBuff );
+    // cout<<"read from"<<host<<path<<endl;
+    cout << readBuff;
+  }
+  checkzSocket.close();
+  // cout<<"socket have closed!"<<endl;
+  // cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
+  // cerr << "Warning: get_URL() has not been implemented yet.\n";
+}
+>>>>>>> my-feature-branch
 
   try {
     // 连接到指定的主机和端口（默认 HTTP 端口 80）

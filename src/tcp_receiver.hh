@@ -1,14 +1,19 @@
 #pragma once
 
+#include "byte_stream.hh"
 #include "reassembler.hh"
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
+#include "wrapping_integers.hh"
+#include <cstdint>
 
 class TCPReceiver
 {
 public:
   // Construct with given Reassembler
-  explicit TCPReceiver( Reassembler&& reassembler ) : reassembler_( std::move( reassembler ) ) {}
+  explicit TCPReceiver( Reassembler&& reassembler )
+    : reassembler_( std::move( reassembler ) ), checkpoint( 0 ), isn_set_( false ), zero_point_( 0 )
+  {}
 
   /*
    * The TCPReceiver receives TCPSenderMessages, inserting their payload into the Reassembler
@@ -26,5 +31,8 @@ public:
   const Writer& writer() const { return reassembler_.writer(); }
 
 private:
-  Reassembler reassembler_;
+Reassembler reassembler_;
+uint64_t checkpoint;
+bool isn_set_; // 标记是否已收到SYN
+Wrap32 zero_point_;
 };

@@ -3,7 +3,9 @@
 #include "byte_stream.hh"
 #include "tcp_receiver_message.hh"
 #include "tcp_sender_message.hh"
-
+#include "wrapping_integers.hh"
+#include <deque>
+#include <cstdint>
 #include <functional>
 
 class TCPSender
@@ -11,8 +13,14 @@ class TCPSender
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
   TCPSender( ByteStream&& input, Wrap32 isn, uint64_t initial_RTO_ms )
-    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms )
-  {}
+    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms ) , _isSent_ISN( 0 ), _isSent_FIN( 0 )
+  {current_RTO_ms_=initial_RTO_ms;
+    next_seq=0;
+    _primitive_window_size=1;_outstanding_bytes=0;
+    timer_running_=false;
+    _isSent_FIN=false;
+    _isSent_ISN=false;
+  }
 
   /* Generate an empty TCPSenderMessage */
   TCPSenderMessage make_empty_message() const;
@@ -42,4 +50,16 @@ private:
   ByteStream input_;
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+  uint64_t next_seq;
+  TCPReceiverMessage receive_;
+  bool _isSent_ISN;
+  bool _isSent_FIN;
+  bool timer_running_;
+  uint64_t _primitive_window_size;
+  uint64_t current_RTO_ms_;
+  uint64_t consecutive_retransmission{};
+  uint64_t timer_remaining_ms_{};
+  std::deque<TCPSenderMessage> _outstanding_collections; // 记录所有已发送未完成的段
+  std::deque<TCPSenderMessage> _ready_collections; 
+  uint64_t _outstanding_bytes;      
 };
